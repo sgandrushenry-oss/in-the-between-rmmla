@@ -23,6 +23,7 @@
     <button data-open="practices">Little Movements</button>
     <button data-open="sources">Sources</button>
     <button data-open="about">About / Reuse</button>
+    <a class="presenter-only-link" href="/links.html" target="_blank" rel="noopener">Links</a>
     <span class="mode-badge" id="mode-badge">EXPLORE</span><button id="copy-link">Copy room link</button>
   </div>
 </header>
