@@ -29,7 +29,8 @@ sections.forEach((s,i)=>{const a=document.createElement('a');a.href='#'+s.id;a.s
 const progressLinks=[...progress.querySelectorAll('a')];
 let current=0; let frozen=false; let contributions=[]; let poemSeed=1; let visualSeed=1; let timePage=0; let poemPage=0; let mode='explore'; let loopTimer=null;
 const params=new URLSearchParams(location.search); const room=(params.get('room')||'rmmla2026').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40)||'between';
-const requestedMode=(params.get('mode')||'').toLowerCase(); const legacyPresenter=params.get('presenter')==='1'; const demo=params.get('demo')==='1';
+const pathMode=location.pathname.toLowerCase().includes('presenter')?'present':(location.pathname.toLowerCase().includes('audience')?'explore':'');
+const requestedMode=(params.get('mode')||pathMode||'').toLowerCase(); const legacyPresenter=params.get('presenter')==='1'; const demo=params.get('demo')==='1';
 document.getElementById('room-code').textContent=room;document.getElementById('poem-room').textContent=room;
 const note=document.getElementById('presenter-note'); const modeBadge=document.getElementById('mode-badge');
 function setActive(i){current=Math.max(0,Math.min(sections.length-1,i));progressLinks.forEach((a,j)=>a.classList.toggle('active',j===current));note.textContent=sections[current].dataset.note||''}
