@@ -61,6 +61,8 @@ function mime(file) {
 }
 function serveFile(req,res,pathname) {
   let rel = pathname === '/' ? 'index_v11.html' : pathname.replace(/^\/+/, '');
+  if (rel === 'presenter' || rel === 'presenter.html') rel = 'index_v11.html';
+  if (rel === 'audience' || rel === 'audience.html') rel = 'index_v11.html';
   if (rel === 'index.html') rel = 'index_v11.html';
   const file = path.resolve(ROOT, rel);
   if (!file.startsWith(ROOT + path.sep) && file !== path.join(ROOT,'index_v11.html')) { res.writeHead(403); return res.end('Forbidden'); }
