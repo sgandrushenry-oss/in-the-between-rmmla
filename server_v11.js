@@ -7,6 +7,14 @@ const path = require('path');
 const crypto = require('crypto');
 
 const ROOT = __dirname;
+const PARTS_DIR = path.join(ROOT, 'parts');
+const INDEX_FILE = path.join(ROOT, 'index_v11.html');
+try {
+  if (fs.existsSync(PARTS_DIR)) {
+    const parts = fs.readdirSync(PARTS_DIR).filter(n=>/^index_\\d+\\.part$/.test(n)).sort();
+    if (parts.length) fs.writeFileSync(INDEX_FILE, parts.map(n=>fs.readFileSync(path.join(PARTS_DIR,n),'utf8')).join(''));
+  }
+} catch (e) { console.error('Could not assemble index_v11.html', e); }
 const DATA_DIR = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(ROOT, 'data');
 const DATA_FILE = process.env.DATA_FILE ? path.resolve(process.env.DATA_FILE) : path.join(DATA_DIR, 'poems.json');
 const PORT = Number(process.env.PORT || 8080);
