@@ -29,7 +29,8 @@ sections.forEach((s,i)=>{const a=document.createElement('a');a.href='#'+s.id;a.s
 const progressLinks=[...progress.querySelectorAll('a')];
 let current=0; let frozen=false; let contributions=[]; let poemSeed=1; let visualSeed=1; let timePage=0; let poemPage=0; let mode='explore'; let loopTimer=null;
 const params=new URLSearchParams(location.search); const room=(params.get('room')||'rmmla2026').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40)||'between';
-const pathMode=location.pathname.toLowerCase().includes('presenter')?'present':(location.pathname.toLowerCase().includes('audience')?'explore':'');
+const lowerPath=location.pathname.toLowerCase();
+const pathMode=lowerPath.includes('presenter')?'present':((lowerPath.includes('presentation')||lowerPath.includes('/view'))?'view':(lowerPath.includes('audience')?'explore':''));
 const requestedMode=(params.get('mode')||pathMode||'').toLowerCase(); const legacyPresenter=params.get('presenter')==='1'; const demo=params.get('demo')==='1';
 document.getElementById('room-code').textContent=room;document.getElementById('poem-room').textContent=room;
 const note=document.getElementById('presenter-note'); const modeBadge=document.getElementById('mode-badge');
@@ -41,13 +42,13 @@ if(location.hash){const i=sections.findIndex(s=>s.id===location.hash.slice(1));i
 const loopOrder=['route','thresholds','time','state','daemon','conduction','notice','wait','accompany','mark','care','allow','poem','becoming','threshold'];
 let loopIndex=0;
 function clearLoop(){if(loopTimer){clearTimeout(loopTimer);loopTimer=null}}
-function setMode(next){clearLoop();mode=next;document.body.classList.remove('mode-present','mode-loop','mode-explore');document.body.classList.add('mode-'+mode);modeBadge.textContent=mode.toUpperCase();if(mode==='present'){document.body.classList.add('presenter')}else{document.body.classList.remove('presenter')}if(mode==='loop'){frozen=false;document.getElementById('freeze-poem').textContent='freeze';loopIndex=Math.max(0,loopOrder.indexOf(sections[current]?.id));if(loopIndex<0)loopIndex=0;advanceLoop(true)}}
+function setMode(next){clearLoop();mode=next;document.body.classList.remove('mode-present','mode-loop','mode-explore','mode-view');document.body.classList.add('mode-'+mode);modeBadge.textContent=mode==='view'?'VIEW':mode.toUpperCase();if(mode==='present'){document.body.classList.add('presenter')}else{document.body.classList.remove('presenter')}if(mode==='loop'){frozen=false;document.getElementById('freeze-poem').textContent='freeze';loopIndex=Math.max(0,loopOrder.indexOf(sections[current]?.id));if(loopIndex<0)loopIndex=0;advanceLoop(true)}}
 function advanceLoop(first=false){if(mode!=='loop')return;const id=loopOrder[loopIndex%loopOrder.length];const idx=sections.findIndex(s=>s.id===id);visualSeed++;timePage++;if(id==='poem'&&contributions.length){const pages=Math.max(1,Math.ceil(contributions.length/POEM_PAGE_SIZE));if(pages>1){poemPage=(poemPage+1)%pages;if(poemPage===0)poemSeed++}}renderAll();if(idx>=0)go(idx,first?'auto':'smooth');loopIndex=(loopIndex+1)%loopOrder.length;const dwell=id==='poem'?20000:(id==='becoming'?17000:(['notice','wait','accompany','mark','care','allow'].includes(id)?9000:11000));loopTimer=setTimeout(()=>advanceLoop(false),dwell)}
 function toggleLoop(){setMode(mode==='loop'?'present':'loop')}
 
 const landing=document.getElementById('landing');
 function closeLanding(){landing.classList.remove('open');try{sessionStorage.setItem('inbetween_landing_seen_'+room,'1')}catch{}}
-function maybeLanding(){if(mode==='present'||mode==='loop')return;let seen=false;try{seen=sessionStorage.getItem('inbetween_landing_seen_'+room)==='1'}catch{}if(!seen)landing.classList.add('open')}
+function maybeLanding(){if(mode==='present'||mode==='loop'||mode==='view')return;let seen=false;try{seen=sessionStorage.getItem('inbetween_landing_seen_'+room)==='1'}catch{}if(!seen)landing.classList.add('open')}
 document.getElementById('enter-performance').onclick=()=>{closeLanding();setMode('explore');go(0,'smooth')};
 document.getElementById('landing-contribute').onclick=()=>{closeLanding();openContribute()};
 
