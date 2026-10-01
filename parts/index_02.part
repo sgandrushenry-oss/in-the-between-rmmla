@@ -9,7 +9,8 @@
 .live-whisper{font-family:var(--sans);font-size:.74rem;color:var(--gray-3);margin-top:.8rem}
 [data-live-zone="notice"], [data-live-zone="wait"]{position:relative}
 .mode-loop .little-word{animation:loopBreath 8s ease-in-out infinite}@keyframes loopBreath{50%{letter-spacing:-.02em;transform:translateX(6px)}}
-@media(max-width:860px){.accompany,.care-stage,.performance-reveal{grid-template-columns:1fr}.accompany .bridge{transform:rotate(90deg)}.allow-list{grid-template-columns:1fr}.poetic-lines .indent,.poetic-lines .deep{padding-left:0}}
+.entry-card-head{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:.9rem;align-items:start}.entry-card-head h3{margin:.1rem 0 .55rem}.qr-live{text-align:center}.qr-live img{width:150px;max-width:100%;height:auto;background:white;padding:.35rem;border:1px solid var(--line);display:block;margin:0 auto}.qr-live .small{margin:.35rem 0 0;font-size:.68rem;line-height:1.25}
+@media(max-width:860px){.accompany,.care-stage,.performance-reveal{grid-template-columns:1fr}.accompany .bridge{transform:rotate(90deg)}.allow-list{grid-template-columns:1fr}.poetic-lines .indent,.poetic-lines .deep{padding-left:0}.entry-card-head{grid-template-columns:1fr 128px}.qr-live img{width:128px}}
 
 </style>
 </head>
@@ -53,12 +54,19 @@
         <p class="statement"><strong>What if graduate education is not one threshold leading toward a finished academic self?</strong></p>
       </div>
       <aside class="entry-card" aria-label="Audience participation">
-        <h3>Add something to the in-between</h3>
-        <p>Your anonymous word, phrase, or short poetic fragment may enter the route, timeline, categories, and collective poem.</p>
+        <div class="entry-card-head">
+          <div>
+            <h3>Add something to the in-between</h3>
+            <p>Your anonymous word, phrase, or short poetic fragment may enter the route, timeline, categories, and collective poem.</p>
+          </div>
+          <div class="qr-live">
+            <img alt="QR code to contribute to the RMMLA In the Between performance" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkwAAAJMAQAAAAAgH8RuAAAD+ElEQVR4nO2dSW7jMBBFfzV6T90g9z9WbkCdoHrBqUilN6YdKPErGAYtiw/S4qMmSjTXk+z88yySBAoUKFCgQIECBQoUKFCgvgll3Q7ZMf6OR/q4DsKUF10VKFBvhEperPyqojskybM8N2GeVk/O65S73yAoULdHBY8m/zRJOq2oz8z80zyrKM4/LXrGl14VKFC/HfX3eshPc8kkPw+T/DSlLEnJLWUvrvC1VwUK1HujktuH97HUQtDTPEtS+f7uqwIF6neihh/seZ1Jaq6wDFyy5Equ81ByS27zlGdfFShQ74c6a41TkpIruR1t8OG9RDP84zLlRVcFCtTvR1U/uKxYKz9LYlgGOk2neXOL1yl3vUFQoG6OkntoMZSAszQd8npayQ1Lq6Imhm2Wu3u+5w2CAnVzVNNgHv2+SZWtAlOl15RYLaFBUKB2bXKCxVoLvgyK7obvy/XMVbFoEBSoh2x4vSa6GI6OmDN5l96Y2xWKBkGBetS6AHsOWDPB1I7n6vv6d5Fej2DRIChQOzY0mCc9VtGFhLEuVPMpHxyJJBoEBeohi4HoiDabDNUTwBRKNMEbjkoOGgQF6iGL+WAsh1YZSl2JUXRDkuSDoEDtWShsaskHp9bDUoqJrQo0CArUhkUBxtxw7VBEJ3jNCtEgKFCPWvdxF7+mfnzqyyt4xkQ+CArUrsV8cHJzs9CiW1RUrqNBUKC2zIPFSktxhXGpTFTiyB/JB0GB2rORAwbdSYolmhGazn9VQ4OgQG3YVIcpFnqFy891kYxEPggK1Kb1zG6EneX4XCktJ4zvRY9oEBSoR21xaqPkEuqiQ5vNXY4UUsSioEBt2VKQGeWXa7lmWbHWB2gQFKgN634wqk9a08B6RGt0SiwKCtSmLTWZKQqN9dJYhMkhKM34QVCgtmwKODUeG4wlmmUp6ehW5EBAg6BAPWRdffE1TSPanMsvwxv26Rk/CArUM1At1zOzscOLpOR9eyUlLy/c7h6zfDdV3vsGQYG6KeryHH2W9PUzg2vUWqZn/CAoUFs2tR4Uip/xjWruMQdcFqqhQVCgdmz1cNfKjM/anE/AD4ICtWlLbDlesBZkOD0/2N3l0spHg6BAPWJt36Wyw2DZa6nssiRJcrWtl86jfPrM/tcLrgoUqPdBXVZlX57SHU/v9t7EvJYGPwgK1JNRp5UmhRRbD1JyO2SH6r7YuW6Z3RoZP+cGQYG6EeqLvbAl6TxqdFoagqnuxjv2xZas7pfdw9F73iAoUD8G1ZuD3pbN2FE7EWZmR3iXWnL7CBHsK68KFKjfjvpPXTS+US19tXw0dPPJB0GB2rBY2Nyz8543CAoUKFCgQIECBQoUKFCgvrR/sig699eIiHwAAAAASUVORK5CYII=">
+            <div class="small"><strong>SCAN TO CONTRIBUTE</strong><br>reviewed before appearing live</div>
+          </div>
+        </div>
         <button data-contribute>Contribute a fragment</button>
         <p class="small"><span class="live-dot" id="live-dot"></span><span id="live-status">Checking shared room…</span></p>
         <p class="small roomline">Room: <code id="room-code">rmmla2026</code></p>
-        <div style="margin-top:1rem;text-align:center"><img alt="QR code to contribute to the RMMLA In the Between performance" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkwAAAJMAQAAAAAgH8RuAAAD+ElEQVR4nO2dSW7jMBBFfzV6T90g9z9WbkCdoHrBqUilN6YdKPErGAYtiw/S4qMmSjTXk+z88yySBAoUKFCgQIECBQoUKFCgvgll3Q7ZMf6OR/q4DsKUF10VKFBvhEperPyqojskybM8N2GeVk/O65S73yAoULdHBY8m/zRJOq2oz8z80zyrKM4/LXrGl14VKFC/HfX3eshPc8kkPw+T/DSlLEnJLWUvrvC1VwUK1HujktuH97HUQtDTPEtS+f7uqwIF6neihh/seZ1Jaq6wDFyy5Equ81ByS27zlGdfFShQ74c6a41TkpIruR1t8OG9RDP84zLlRVcFCtTvR1U/uKxYKz9LYlgGOk2neXOL1yl3vUFQoG6OkntoMZSAszQd8npayQ1Lq6Imhm2Wu3u+5w2CAnVzVNNgHv2+SZWtAlOl15RYLaFBUKB2bXKCxVoLvgyK7obvy/XMVbFoEBSoh2x4vSa6GI6OmDN5l96Y2xWKBkGBetS6AHsOWDPB1I7n6vv6d5Fej2DRIChQOzY0mCc9VtGFhLEuVPMpHxyJJBoEBeohi4HoiDabDNUTwBRKNMEbjkoOGgQF6iGL+WAsh1YZSl2JUXRDkuSDoEDtWShsaskHp9bDUoqJrQo0CArUhkUBxtxw7VBEJ3jNCtEgKFCPWvdxF7+mfnzqyyt4xkQ+CArUrsV8cHJzs9CiW1RUrqNBUKC2zIPFSktxhXGpTFTiyB/JB0GB2rORAwbdSYolmhGazn9VQ4OgQG3YVIcpFnqFy891kYxEPggK1Kb1zG6EneX4XCktJ4zvRY9oEBSoR21xaqPkEuqiQ5vNXY4UUsSioEBt2VKQGeWXa7lmWbHWB2gQFKgN634wqk9a08B6RGt0SiwKCtSmLTWZKQqN9dJYhMkhKM34QVCgtmwKODUeG4wlmmUp6ehW5EBAg6BAPWRdffE1TSPanMsvwxv26Rk/CArUM1At1zOzscOLpOR9eyUlLy/c7h6zfDdV3vsGQYG6KeryHH2W9PUzg2vUWqZn/CAoUFs2tR4Uip/xjWruMQdcFqqhQVCgdmz1cNfKjM/anE/AD4ICtWlLbDlesBZkOD0/2N3l0spHg6BAPWJt36Wyw2DZa6nssiRJcrWtl86jfPrM/tcLrgoUqPdBXVZlX57SHU/v9t7EvJYGPwgK1JNRp5UmhRRbD1JyO2SH6r7YuW6Z3RoZP+cGQYG6EeqLvbAl6TxqdFoagqnuxjv2xZas7pfdw9F73iAoUD8G1ZuD3pbN2FE7EWZmR3iXWnL7CBHsK68KFKjfjvpPXTS+US19tXw0dPPJB0GB2rBY2Nyz8543CAoUKFCgQIECBQoUKFCgvrR/sig699eIiHwAAAAASUVORK5CYII=" style="width:min(210px,72%);height:auto;background:white;padding:.45rem;border:1px solid var(--line)"><div class="small" style="margin-top:.45rem"><strong>SCAN TO CONTRIBUTE</strong><br>Submissions are reviewed before appearing live.</div></div>
       </aside>
     </div>
   </div>
