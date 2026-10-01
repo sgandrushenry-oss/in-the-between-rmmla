@@ -35,7 +35,7 @@ const practices={notice:'Notice before immediately judging.',wait:'Remain open w
 
 setInterval(()=>{if(frozen)return;const items=contributions.length?contributions:sampleOrLive();const pages=Math.max(1,Math.ceil(items.length/TIME_PAGE_SIZE));if(pages>1){timePage=(timePage+1)%pages;renderTime()}},7000);
 setInterval(()=>{if(frozen||!contributions.length)return;const pages=Math.max(1,Math.ceil(contributions.length/POEM_PAGE_SIZE));if(pages>1){poemPage=(poemPage+1)%pages;if(poemPage===0)poemSeed++;renderPoem()}},14000);
-if(legacyPresenter||requestedMode==='present')setMode('present');else if(requestedMode==='loop')setMode('loop');else setMode('explore');
+if(legacyPresenter||requestedMode==='present')setMode('present');else if(requestedMode==='loop')setMode('loop');else if(requestedMode==='view')setMode('view');else setMode('explore');
 maybeLanding();
 detectShared();
 </script>
