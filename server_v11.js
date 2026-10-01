@@ -65,6 +65,7 @@ function mime(file) {
 function serveFile(req,res,pathname) {
   let rel = pathname === '/' ? 'index_v11.html' : pathname.replace(/^\/+/, '');
   if (rel === 'presenter' || rel === 'presenter.html') rel = 'presentation_v11.html';
+  if (rel === 'presentation' || rel === 'presentation.html' || rel === 'view' || rel === 'view.html') rel = 'presentation_v11.html';
   if (rel === 'audience' || rel === 'audience.html') rel = 'index_v11.html';
   if (rel === 'index.html') rel = 'index_v11.html';
   const file = path.resolve(ROOT, rel);
