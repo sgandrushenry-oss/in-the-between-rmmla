@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>In the Between — Contribute</title>
+<style>
+:root{--paper:#FAF9F7;--ink:#111;--muted:#66615D;--line:#C9C5BF;--s1:#F0D5BE;--s2:#D6B99A;--s3:#C58C74;--s4:#A76D5A;--s5:#7C4D4A;--sans:Arial,Helvetica,sans-serif;--serif:Georgia,'Times New Roman',serif}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);font-family:var(--serif);background-color:var(--paper);background-image:radial-gradient(circle at 16% 18%,rgba(240,213,190,.18) 0 1px,transparent 2px),radial-gradient(circle at 78% 26%,rgba(214,185,154,.14) 0 1.2px,transparent 2.3px),radial-gradient(circle at 32% 72%,rgba(197,140,116,.10) 0 1.1px,transparent 2.2px),repeating-linear-gradient(0deg,rgba(0,0,0,.012) 0 1px,transparent 1px 6px)}
+main{max-width:760px;margin:auto;padding:42px 18px 90px}.eyebrow{font:700 .72rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}h1{font-weight:400;line-height:.98;margin:.5rem 0 1rem;font-size:clamp(3rem,11vw,6rem)}p{line-height:1.55}.rule{height:8px;display:grid;grid-template-columns:repeat(5,1fr);margin:1.3rem 0 2rem}.rule i:nth-child(1){background:var(--s1)}.rule i:nth-child(2){background:var(--s2)}.rule i:nth-child(3){background:var(--s3)}.rule i:nth-child(4){background:var(--s4)}.rule i:nth-child(5){background:var(--s5)}.card{background:rgba(255,255,255,.9);border:1px solid var(--line);padding:1rem;margin:1rem 0}.prompt{display:block;font:700 .78rem var(--sans);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.45rem}.promptbtn{width:100%;text-align:left;background:white;border:1px solid var(--ink);padding:.85rem;margin:.35rem 0;cursor:pointer}.promptbtn.active{box-shadow:inset 8px 0 0 var(--s3);background:#fff}.field{display:none;margin-top:1rem}.field.show{display:block}textarea{width:100%;min-height:110px;padding:.8rem;border:1px solid var(--ink);font:1.05rem var(--serif);resize:vertical}.actions{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-top:.7rem}button.submit{border:1px solid var(--ink);background:var(--ink);color:white;padding:.75rem 1rem;font:700 .75rem var(--sans);letter-spacing:.08em;text-transform:uppercase}.status{font:.78rem var(--sans);color:var(--muted)}.privacy{font:.8rem var(--sans);color:var(--muted);margin-top:2rem}.small{font:.82rem var(--sans);color:var(--muted)}a{color:inherit}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">RMMLA · IN THE BETWEEN</div>
+<h1>Add something<br>to the in-between.</h1>
+<p>Your anonymous word or short poetic fragment can become part of a collective, changing poem about graduate education.</p>
+<div class="rule"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="card">
+<div class="prompt">Choose a beginning</div>
+<div id="prompts"></div>
+<div class="field" id="field"><div class="small" id="lead"></div><textarea id="text" maxlength="220" placeholder="your word or short fragment"></textarea><div class="actions"><button class="submit" id="submit">submit for review</button><span class="status" id="status"></span></div></div>
+</div>
+<p class="privacy">No name, email, account, or demographic information is requested by this project. Submissions are reviewed before they appear publicly.</p>
+</main>
+<script>
+const params=new URLSearchParams(location.search);
+const room=(params.get('room')||'rmmla2026').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40)||'rmmla2026';
+const prompts=[
+['between','I have been between'],
+['asked','Graduate school asked me to be'],
+['also','But I was also'],
+['interrupted','Something interrupted my route:'],
+['called','Something kept calling me back:'],
+['notyet','I do not know yet'],
+['made','Someone made room for me by'],
+['little','A little movement that mattered was'],
+['possible','What would make this possible:'],
+['becoming','I am still becoming']
+];
+let chosen=null;
+const box=document.getElementById('prompts'),field=document.getElementById('field'),lead=document.getElementById('lead'),text=document.getElementById('text'),status=document.getElementById('status');
+prompts.forEach(([id,label])=>{const b=document.createElement('button');b.className='promptbtn';b.textContent=label+' …';b.onclick=()=>{document.querySelectorAll('.promptbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');chosen=id;lead.textContent=label;field.classList.add('show');text.focus()};box.appendChild(b)});
+document.getElementById('submit').onclick=async()=>{const value=text.value.replace(/\s+/g,' ').trim();if(!chosen||!value){status.textContent='Choose a beginning and add a fragment.';return}status.textContent='Sending…';try{const r=await fetch('/api/contributions?room='+encodeURIComponent(room),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:chosen,text:value})});if(!r.ok)throw 0;text.value='';status.textContent='Submitted for review. Thank you.'}catch{status.textContent='Could not submit. Please try again.'}};
+</script></body></html>
