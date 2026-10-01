@@ -1,0 +1,133 @@
+.echo-field{position:relative;height:310px;margin:1.5rem 0;border:1px solid var(--gray-1);overflow:hidden;background:white}.echo-field span{position:absolute;font-family:var(--serif);font-style:italic;color:var(--gray-3);font-size:clamp(.95rem,1.7vw,1.2rem);animation:echoPulse 7s ease-in-out infinite}.echo-field span:nth-child(1){left:8%;top:15%}.echo-field span:nth-child(2){left:51%;top:22%;animation-delay:-1.7s}.echo-field span:nth-child(3){left:21%;top:54%;animation-delay:-3.1s}.echo-field span:nth-child(4){left:63%;top:61%;animation-delay:-4.6s}.echo-field .witness-word{left:42%;top:42%;font-family:var(--sans);font-style:normal;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--black);font-size:1rem;border:1px solid var(--black);padding:.55rem .75rem;background:var(--paper)}@keyframes echoPulse{50%{opacity:.28;transform:translateY(-8px)}}
+.wait-field{height:230px;display:grid;place-items:center;position:relative;margin:1rem 0 1.6rem}.wait-dots{display:flex;gap:1.1rem}.wait-dots i{width:18px;height:18px;border-radius:50%;background:var(--skin-3);display:block;animation:waitDot 2.8s ease-in-out infinite}.wait-dots i:nth-child(2){animation-delay:.4s;background:var(--skin-4)}.wait-dots i:nth-child(3){animation-delay:.8s;background:var(--skin-5)}@keyframes waitDot{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-28px);opacity:1}}
+.accompany{display:grid;grid-template-columns:1fr 70px 1fr;gap:1rem;align-items:stretch;margin:1.5rem 0}.accompany .side{border:1px solid var(--black);padding:1.25rem;background:white}.accompany .side.power-with{border-top:9px solid var(--skin-3)}.accompany .bridge{display:grid;place-items:center;font-size:2.5rem}.presence-lines p{margin:.2rem 0;font-size:clamp(1.2rem,2.2vw,1.8rem)}
+.ritual-route{display:flex;gap:1rem;align-items:center;overflow-x:auto;padding:2rem .2rem 1rem}.ritual-route .mark{min-width:150px;position:relative;padding-top:2.3rem;font-family:var(--sans);font-size:.76rem;letter-spacing:.05em;text-transform:uppercase}.ritual-route .mark::before{content:'';position:absolute;top:.5rem;left:0;width:18px;height:18px;border-radius:50%;background:var(--tone,var(--skin-3));box-shadow:0 0 0 7px var(--gray-1)}.ritual-route .mark::after{content:'';position:absolute;top:1rem;left:18px;width:145px;height:2px;background:var(--gray-2)}.ritual-route .mark:last-child::after{display:none}
+.care-stage{display:grid;grid-template-columns:.85fr 1.15fr;gap:2rem;margin-top:1.5rem}.care-stage .commands{border:1px solid var(--gray-2);padding:1rem;background:white}.care-stage .material{border:1px solid var(--black);padding:1rem;background:white;border-top:10px solid var(--skin-4)}.care-stage ul{margin:.7rem 0 0;padding-left:1.2rem}.care-question{font-size:clamp(1.7rem,4vw,3.5rem);line-height:1.1;margin:2rem 0}
+.allow-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin:1.5rem 0}.allow-list span{border-left:8px solid var(--tone,var(--skin-3));background:white;padding:.8rem 1rem;font-size:clamp(1rem,1.7vw,1.25rem)}
+.performance-reveal{display:grid;grid-template-columns:.85fr 1.15fr;gap:2rem;align-items:start}.performance-reveal .meta{border-left:8px solid var(--skin-3);padding-left:1rem}.performance-reveal .meta p{margin:.3rem 0}
+.final-lines{max-width:920px}.final-lines p{font-size:clamp(1.35rem,3vw,2.7rem);line-height:1.12;margin:.35rem 0}.final-lines .final{font-size:clamp(3.3rem,8vw,8rem);line-height:.9;margin-top:2rem}
+.live-whisper{font-family:var(--sans);font-size:.74rem;color:var(--gray-3);margin-top:.8rem}
+[data-live-zone="notice"], [data-live-zone="wait"]{position:relative}
+.mode-loop .little-word{animation:loopBreath 8s ease-in-out infinite}@keyframes loopBreath{50%{letter-spacing:-.02em;transform:translateX(6px)}}
+@media(max-width:860px){.accompany,.care-stage,.performance-reveal{grid-template-columns:1fr}.accompany .bridge{transform:rotate(90deg)}.allow-list{grid-template-columns:1fr}.poetic-lines .indent,.poetic-lines .deep{padding-left:0}}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to presentation</a>
+<header class="topbar">
+  <div class="brand">In the Between: Graduate Students, Liminal Spaces, and the Poetics of Becoming<em>Samantha Andrus-Henry · University of Utah · scholarly performance</em></div>
+  <div class="tools">
+    <button data-open="definitions">Definitions</button>
+    <button data-open="practices">Little Movements</button>
+    <button data-open="sources">Sources</button>
+    <button data-open="about">About / Reuse</button>
+    <span class="mode-badge" id="mode-badge">EXPLORE</span><button id="copy-link">Copy room link</button>
+  </div>
+</header>
+<nav class="progress" aria-label="Presentation movements"></nav>
+
+<div class="landing" id="landing" role="dialog" aria-modal="true" aria-labelledby="landing-title">
+  <div class="landing-card">
+    <div class="eyebrow"><span class="tone"></span>A LIVING SCHOLARLY PERFORMANCE</div>
+    <h1 id="landing-title">In the Between</h1>
+    <p class="lede">Graduate Students, Liminal Spaces, and the Poetics of Becoming</p>
+    <p>This site can be entered as a scholarly performance or joined through an anonymous contribution. Fragments contributed to this room may enter the changing collective poem.</p>
+    <div class="landing-actions"><button id="enter-performance">Enter the performance</button><button id="landing-contribute">Contribute to the poem</button></div>
+    <p class="landing-note">You may contribute before, during, or after a presentation. Do not include names or identifying details.</p>
+  </div>
+</div>
+<main id="main">
+<section id="threshold" class="screen" data-note="SCREEN 1 — THE THRESHOLD. Tell the return-at-55 opening exactly as drafted. Invite anonymous contribution without pausing the talk.">
+  <div class="screen-inner">
+    <div class="eyebrow"><span class="tone"></span>THE THRESHOLD</div>
+    <div class="entry-grid">
+      <div>
+        <div class="poem-title">finish?<br>start over?<br>liminal.</div>
+        <div class="palette-rule" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="poetic-lines">
+          <p>I came back</p><p class="indent">more than twenty years later—</p>
+          <p>the same category:</p><p class="deep"><em>graduate student.</em></p>
+          <p class="whisper">but not the same person / not the same discipline / not the same future</p>
+        </div>
+        <p class="statement"><strong>What if graduate education is not one threshold leading toward a finished academic self?</strong></p>
+      </div>
+      <aside class="entry-card" aria-label="Audience participation">
+        <h3>Add something to the in-between</h3>
+        <p>Your anonymous word, phrase, or short poetic fragment may enter the route, timeline, categories, and collective poem.</p>
+        <button data-contribute>Contribute a fragment</button>
+        <p class="small"><span class="live-dot" id="live-dot"></span><span id="live-status">Checking shared room…</span></p>
+        <p class="small roomline">Room: <code id="room-code">rmmla2026</code></p>
+        <div class="qr-reserve" id="qr-reserve">Conference QR appears here after the final public URL is assigned.</div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="route" class="screen" data-note="SCREEN 2 — THE ROUTE. The route is not necessarily the journey. Teeuwsen et al.; Ives and Spitzer; Pinkert and Bowen. Let audience fragments interrupt the line.">
+  <div class="screen-inner">
+    <div class="eyebrow"><span class="tone" style="background:var(--skin-1)"></span>BIG MOVEMENT 1 · THE ROUTE</div>
+    <h2>the route<br>is not necessarily<br><em>the journey.</em></h2>
+    <div class="route" aria-label="Institutional graduate route interrupted by audience fragments">
+      <div class="route-line"></div>
+      <div class="route-stops"><div class="stop">coursework</div><div class="stop">committee</div><div class="stop">exams / proposal</div><div class="stop">dissertation</div><div class="stop">degree</div><div class="stop">job</div></div>
+      <div class="breakers" data-live-zone="route"></div>
+    </div>
+    <div class="poetic-lines">
+      <p>an oldtimer</p><p class="indent">can become</p><p class="deep">a new timer again.</p>
+    </div>
+    <p class="statement">Expertise does not end liminality.</p>
+    <p class="citation">(Ives and Spitzer; Pinkert and Bowen 16, 27–36; Teeuwsen et al. 684)</p>
+  </div>
+</section>
+
+<section id="thresholds" class="screen" data-note="SCREEN 3 — AN INFRASTRUCTURE OF THRESHOLDS. Godbee prevents romanticizing uncertainty. Emphasize the difference between not knowing yet and being made uncertain about one's right to know.">
+  <div class="screen-inner">
+    <div class="eyebrow"><span class="tone" style="background:var(--skin-2)"></span>BIG MOVEMENT 2 · AN INFRASTRUCTURE OF THRESHOLDS</div>
+    <h2>There is no single<br>in-between.</h2>
+    <div class="threshold-grid">
+      <div class="threshold"><strong>learner</strong><span>expert</span></div>
+      <div class="threshold"><strong>student</strong><span>worker</span></div>
+      <div class="threshold"><strong>teacher</strong><span>apprentice</span></div>
+      <div class="threshold"><strong>insider</strong><span>outsider</span></div>
+      <div class="threshold"><strong>necessary</strong><span>disposable</span></div>
+      <div class="threshold"><strong>knower</strong><span>not yet recognized as knowing</span></div>
+    </div>
+    <div class="poetic-lines">
+      <p><em>I do not know yet</em></p>
+      <p class="indent">is not the same as</p>
+      <p class="deep"><em>you do not have the right to know.</em></p>
+    </div>
+    <p class="bigline">Who gets to be unfinished?</p>
+    <p class="citation">(Godbee 43–44)</p>
+  </div>
+</section>
+
+<section id="time" class="screen" data-note="SCREEN 4 — TIME. Name Chronos, Wetherbee Phelps, trajectory entity, and your return at 55. Let every audience contribution cycle through non-overlapping lanes.">
+  <div class="screen-inner">
+    <div class="eyebrow"><span class="tone" style="background:var(--skin-3)"></span>BIG MOVEMENT 3 · TIME</div>
+    <h2>Who is “on time”<br>when lives are not the same?</h2>
+    <p class="lede">Semesters. Funding clocks. Deadlines. Time-to-degree. Publication timelines. Job-market cycles.</p>
+    <div class="time-stage" aria-label="Institutional time colliding with lived time"><div class="time-tick"></div><div data-live-zone="time"></div></div>
+    <div class="cycle-status" id="time-cycle-status" aria-live="polite"></div>
+    <div class="poetic-lines">
+      <p>I came back at fifty-five</p>
+      <p class="indent">to no place</p>
+      <p class="deep">waiting unchanged for me.</p>
+      <p class="whisper">I had not been paused for twenty years.</p>
+    </div>
+    <p class="citation">(Phelps 2, 14)</p>
+  </div>
+</section>
+
+<section id="state" class="screen" data-note="SCREEN 5 — THE STATE / A STATE. Clarify you are not equating the university with a nation-state. Use state as settled condition and institutional classification/legibility. Ellsworth 6, 47.">
+  <div class="screen-inner">
+    <div class="eyebrow"><span class="tone" style="background:var(--skin-4)"></span>BIG MOVEMENT 4 · THE STATE / A STATE</div>
+    <h2>What happens when a moving person<br>is asked to perform<br>a stable academic identity?</h2>
+    <div class="state-grid">
+      <div>
+        <div class="labels"><div class="labelbox">student</div><div class="labelbox">TA / RA / GTI</div><div class="labelbox">candidate</div><div class="labelbox">productive</div><div class="labelbox">expert</div><div class="labelbox">marketable</div></div>
+        <p class="live-whisper">categories organize; categories can also become destinations.</p>
+      </div>
+      <div class="spill" data-live-zone="state" aria-label="Audience fragments spilling beyond institutional labels"></div>
+    </div>
