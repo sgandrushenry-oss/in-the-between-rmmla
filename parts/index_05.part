@@ -1,0 +1,82 @@
+<h3>Conference QR</h3><p>Once the final version has a stable public URL, create one permanent QR code pointing to the audience room URL (for example <code>...?room=rmmla2026</code>). Put the same code on the opening screen, printed cards, and conference signs. Because the room is encoded in the link, the same project can later use a different room without mixing poems.</p>
+<h3>Design palette</h3><p>Black, white, and gray provide the base. The five accent tones are <code>#F0D5BE</code>, <code>#D6B99A</code>, <code>#C58C74</code>, <code>#A76D5A</code>, and <code>#7C4D4A</code>. They are used as human-toned accents rather than as fixed identity categories.</p>
+</aside>
+
+<aside class="drawer" id="moderation" aria-label="Presenter moderation">
+<button class="drawer-close" data-close>Close</button><h2>Moderate this room</h2>
+<p class="small">Presenter-only. Hide a fragment from the live performance without deleting the rest of the poem. Hidden fragments remain in the room record and can be restored.</p>
+<div class="mod-key"><input type="password" id="moderation-key" autocomplete="off" placeholder="moderation key"><button id="load-moderation">Load</button></div>
+<p class="small" id="moderation-status">In shared mode, the server must be started with an <code>ADMIN_TOKEN</code>. The key is kept only for this browser tab.</p>
+<div class="moderation-list" id="moderation-list"></div>
+</aside>
+
+<div class="modal" id="contribution-modal" role="dialog" aria-modal="true" aria-labelledby="contrib-title">
+  <div class="modal-card">
+    <button class="drawer-close" id="modal-close">Close</button>
+    <h2 id="contrib-title">Add something to the in-between.</h2>
+    <p>Choose a sentence opening and finish it with a word, phrase, or short fragment. Your contribution is anonymous to this presentation. Do not include names or identifying details.</p>
+    <div class="prompt-list" id="prompt-list"></div>
+    <label for="fragment"><h3>Your fragment</h3></label>
+    <textarea id="fragment" maxlength="220" placeholder="a word, phrase, or short fragment"></textarea>
+    <div class="submit-row"><span class="small" id="submit-status">The poem will preserve your words and let them enter a changing collective arrangement.</span><div><button class="ghost" id="modal-cancel">Cancel</button> <button id="submit-fragment">Add to the poem</button></div></div>
+  </div>
+</div>
+
+<script>
+const sections=[...document.querySelectorAll('.screen')];
+const progress=document.querySelector('.progress');
+sections.forEach((s,i)=>{const a=document.createElement('a');a.href='#'+s.id;a.setAttribute('aria-label','Go to '+s.id);a.dataset.i=i;a.innerHTML='<span></span>';progress.appendChild(a)});
+const progressLinks=[...progress.querySelectorAll('a')];
+let current=0; let frozen=false; let contributions=[]; let poemSeed=1; let visualSeed=1; let timePage=0; let poemPage=0; let mode='explore'; let loopTimer=null;
+const params=new URLSearchParams(location.search); const room=(params.get('room')||'rmmla2026').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40)||'between';
+const requestedMode=(params.get('mode')||'').toLowerCase(); const legacyPresenter=params.get('presenter')==='1'; const demo=params.get('demo')==='1';
+document.getElementById('room-code').textContent=room;document.getElementById('poem-room').textContent=room;
+const note=document.getElementById('presenter-note'); const modeBadge=document.getElementById('mode-badge');
+function setActive(i){current=Math.max(0,Math.min(sections.length-1,i));progressLinks.forEach((a,j)=>a.classList.toggle('active',j===current));note.textContent=sections[current].dataset.note||''}
+function go(i,behavior){i=Math.max(0,Math.min(sections.length-1,i));sections[i].scrollIntoView({behavior:behavior||((matchMedia('(prefers-reduced-motion:reduce)').matches)?'auto':'smooth')});history.replaceState(null,'','#'+sections[i].id);setActive(i)}
+const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.56){const i=sections.indexOf(e.target);setActive(i);if(mode!=='loop')history.replaceState(null,'','#'+e.target.id)}}),{threshold:[.56]});sections.forEach(s=>observer.observe(s));
+if(location.hash){const i=sections.findIndex(s=>s.id===location.hash.slice(1));if(i>=0)setActive(i)}else setActive(0);
+
+const loopOrder=['route','thresholds','time','state','daemon','conduction','notice','wait','accompany','mark','care','allow','poem','becoming','threshold'];
+let loopIndex=0;
+function clearLoop(){if(loopTimer){clearTimeout(loopTimer);loopTimer=null}}
+function setMode(next){clearLoop();mode=next;document.body.classList.remove('mode-present','mode-loop','mode-explore');document.body.classList.add('mode-'+mode);modeBadge.textContent=mode.toUpperCase();if(mode==='present'){document.body.classList.add('presenter')}else{document.body.classList.remove('presenter')}if(mode==='loop'){frozen=false;document.getElementById('freeze-poem').textContent='freeze';loopIndex=Math.max(0,loopOrder.indexOf(sections[current]?.id));if(loopIndex<0)loopIndex=0;advanceLoop(true)}}
+function advanceLoop(first=false){if(mode!=='loop')return;const id=loopOrder[loopIndex%loopOrder.length];const idx=sections.findIndex(s=>s.id===id);visualSeed++;timePage++;if(id==='poem'&&contributions.length){const pages=Math.max(1,Math.ceil(contributions.length/POEM_PAGE_SIZE));if(pages>1){poemPage=(poemPage+1)%pages;if(poemPage===0)poemSeed++}}renderAll();if(idx>=0)go(idx,first?'auto':'smooth');loopIndex=(loopIndex+1)%loopOrder.length;const dwell=id==='poem'?20000:(id==='becoming'?17000:(['notice','wait','accompany','mark','care','allow'].includes(id)?9000:11000));loopTimer=setTimeout(()=>advanceLoop(false),dwell)}
+function toggleLoop(){setMode(mode==='loop'?'present':'loop')}
+
+const landing=document.getElementById('landing');
+function closeLanding(){landing.classList.remove('open');try{sessionStorage.setItem('inbetween_landing_seen_'+room,'1')}catch{}}
+function maybeLanding(){if(mode==='present'||mode==='loop')return;let seen=false;try{seen=sessionStorage.getItem('inbetween_landing_seen_'+room)==='1'}catch{}if(!seen)landing.classList.add('open')}
+document.getElementById('enter-performance').onclick=()=>{closeLanding();setMode('explore');go(0,'smooth')};
+document.getElementById('landing-contribute').onclick=()=>{closeLanding();openContribute()};
+
+document.getElementById('prev').onclick=()=>{if(mode==='loop')setMode('present');go(current-1)};document.getElementById('next').onclick=()=>{if(mode==='loop')setMode('present');go(current+1)};document.getElementById('toggle-notes').onclick=()=>document.body.classList.toggle('presenter');document.getElementById('open-contribute').onclick=openContribute;document.getElementById('start-loop').onclick=toggleLoop;document.getElementById('explore-mode').onclick=()=>setMode('explore');
+document.addEventListener('keydown',e=>{if(['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;if(e.key==='Escape'&&mode==='loop'){e.preventDefault();setMode('present');return}if(e.key.toLowerCase()==='l'){e.preventDefault();toggleLoop();return}if(mode==='loop')return;if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(current+1)}if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(current-1)}if(e.key.toLowerCase()==='p')document.body.classList.toggle('presenter');if(e.key.toLowerCase()==='c')openContribute();if(e.key.toLowerCase()==='d')openDrawer('definitions');if(e.key.toLowerCase()==='o')openDrawer('practices');if(e.key.toLowerCase()==='s')openDrawer('sources');if(e.key.toLowerCase()==='m'&&document.body.classList.contains('presenter'))openModeration()});
+
+document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openDrawer(b.dataset.open));document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('.drawer').classList.remove('open'));
+function openDrawer(id){document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open'));document.getElementById(id)?.classList.add('open')}
+
+document.getElementById('copy-link').onclick=async()=>{const u=new URL(location.href);u.hash='';u.searchParams.set('room',room);u.searchParams.delete('presenter');u.searchParams.delete('mode');try{await navigator.clipboard.writeText(u.href);document.getElementById('copy-link').textContent='Copied'}catch{prompt('Copy this room link:',u.href)}setTimeout(()=>document.getElementById('copy-link').textContent='Copy room link',1400)};
+
+const prompts=[
+ {id:'between',lead:'I have been between',tone:'var(--skin-1)',tail:'…'},
+ {id:'asked',lead:'Graduate school asked me to be',tone:'var(--skin-2)',tail:'…'},
+ {id:'also',lead:'But I was also',tone:'var(--skin-3)',tail:'…'},
+ {id:'interrupted',lead:'Something interrupted my route:',tone:'var(--skin-4)',tail:''},
+ {id:'called',lead:'Something kept calling me back:',tone:'var(--skin-5)',tail:''},
+ {id:'notyet',lead:'I do not know yet',tone:'var(--gray-2)',tail:'…'},
+ {id:'made',lead:'Someone made room for me by',tone:'var(--skin-2)',tail:'…'},
+ {id:'little',lead:'A little movement that mattered was',tone:'var(--skin-3)',tail:'…'},
+ {id:'possible',lead:'What would make this possible:',tone:'var(--skin-4)',tail:''},
+ {id:'becoming',lead:'I am still becoming',tone:'var(--skin-5)',tail:'…'}
+];
+let selectedPrompt=prompts[0];const promptList=document.getElementById('prompt-list');
+prompts.forEach((p,i)=>{const b=document.createElement('button');b.className='prompt-btn'+(i===0?' active':'');b.type='button';b.style.setProperty('--tone',p.tone);b.innerHTML='<span class="swatch"></span><span><strong>'+p.lead+'</strong> ______ '+p.tail+'</span>';b.onclick=()=>{selectedPrompt=p;[...promptList.children].forEach(x=>x.classList.remove('active'));b.classList.add('active')};promptList.appendChild(b)});
+const modal=document.getElementById('contribution-modal');document.querySelectorAll('[data-contribute]').forEach(b=>b.onclick=openContribute);document.getElementById('modal-close').onclick=closeContribute;document.getElementById('modal-cancel').onclick=closeContribute;modal.addEventListener('click',e=>{if(e.target===modal)closeContribute()});
+function openContribute(){modal.classList.add('open');setTimeout(()=>document.getElementById('fragment').focus(),50)}function closeContribute(){modal.classList.remove('open')}
+
+let shared=false, stream=null; const status=document.getElementById('live-status'),dot=document.getElementById('live-dot');
+async function detectShared(){try{const r=await fetch('/api/status',{cache:'no-store'});if(!r.ok)throw 0;shared=true;status.textContent='Shared room connected';dot.classList.add('on');await loadShared();connectStream()}catch{shared=false;status.textContent='Local mode: fragments stay in this browser';dot.classList.remove('on');loadLocal()}}
+function localKey(){return 'inbetween_v11_'+room}
+function loadLocal(){try{contributions=JSON.parse(localStorage.getItem(localKey())||'[]')}catch{contributions=[]}if(demo&&!contributions.length){contributions=[{id:'demo1',type:'between',text:'expert and beginner',createdAt:Date.now()-9000},{id:'demo2',type:'interrupted',text:'caregiving',createdAt:Date.now()-8000},{id:'demo3',type:'asked',text:'always available',createdAt:Date.now()-7000},{id:'demo4',type:'called',text:'the question I could not leave alone',createdAt:Date.now()-6000},{id:'demo5',type:'notyet',text:'what kind of scholar I was becoming',createdAt:Date.now()-5000},{id:'demo6',type:'made',text:'listening before correcting',createdAt:Date.now()-4000},{id:'demo7',type:'little',text:'someone saying stay with it',createdAt:Date.now()-3000},{id:'demo8',type:'possible',text:'time that was not already owed elsewhere',createdAt:Date.now()-2000},{id:'demo9',type:'becoming',text:'unfinished on purpose',createdAt:Date.now()-1000}]}renderAll()}
+async function loadShared(){try{const r=await fetch('/api/contributions?room='+encodeURIComponent(room),{cache:'no-store'});contributions=await r.json();renderAll()}catch{}}
