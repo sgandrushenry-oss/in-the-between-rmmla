@@ -8,13 +8,16 @@ const crypto = require('crypto');
 
 const ROOT = __dirname;
 const PARTS_DIR = path.join(ROOT, 'parts');
-const INDEX_FILE = path.join(ROOT, 'index_v11.html');
+const PRESENTATION_FILE = path.join(ROOT, 'presentation_v11.html');
 try {
   if (fs.existsSync(PARTS_DIR)) {
-    const parts = fs.readdirSync(PARTS_DIR).filter(n=>/^index_\\d+\\.part$/.test(n)).sort();
-    if (parts.length) fs.writeFileSync(INDEX_FILE, parts.map(n=>fs.readFileSync(path.join(PARTS_DIR,n),'utf8')).join(''));
+    const parts = fs.readdirSync(PARTS_DIR).filter(n=>/^index_\d+\.part$/.test(n)).sort();
+    if (parts.length) {
+      fs.writeFileSync(PRESENTATION_FILE, parts.map(n=>fs.readFileSync(path.join(PARTS_DIR,n),'utf8')).join(''));
+      console.log('Assembled presentation_v11.html from ' + parts.length + ' parts.');
+    }
   }
-} catch (e) { console.error('Could not assemble index_v11.html', e); }
+} catch (e) { console.error('Could not assemble presentation_v11.html', e); }
 const DATA_DIR = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : path.join(ROOT, 'data');
 const DATA_FILE = process.env.DATA_FILE ? path.resolve(process.env.DATA_FILE) : path.join(DATA_DIR, 'poems.json');
 const PORT = Number(process.env.PORT || 8080);
@@ -61,11 +64,11 @@ function mime(file) {
 }
 function serveFile(req,res,pathname) {
   let rel = pathname === '/' ? 'index_v11.html' : pathname.replace(/^\/+/, '');
-  if (rel === 'presenter' || rel === 'presenter.html') rel = 'index_v11.html';
+  if (rel === 'presenter' || rel === 'presenter.html') rel = 'presentation_v11.html';
   if (rel === 'audience' || rel === 'audience.html') rel = 'index_v11.html';
   if (rel === 'index.html') rel = 'index_v11.html';
   const file = path.resolve(ROOT, rel);
-  if (!file.startsWith(ROOT + path.sep) && file !== path.join(ROOT,'index_v11.html')) { res.writeHead(403); return res.end('Forbidden'); }
+  if (!file.startsWith(ROOT + path.sep)) { res.writeHead(403); return res.end('Forbidden'); }
   fs.stat(file,(err,st)=>{
     if(err || !st.isFile()){res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});return res.end('Not found');}
     res.writeHead(200,{'Content-Type':mime(file),'Cache-Control':extCache(file)});
