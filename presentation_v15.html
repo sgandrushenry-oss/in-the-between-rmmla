@@ -1,1 +1,48 @@
-PLACEHOLDER
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>In the Between — V15</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#FAF9F7}
+iframe{border:0;width:100%;height:100%;display:block;background:#FAF9F7}
+</style>
+</head>
+<body>
+<iframe id="deck" title="In the Between presentation"></iframe>
+<script>
+const params=new URLSearchParams(location.search);
+const room=(params.get('room')||'rmmla2026').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,40)||'rmmla2026';
+const presenter=location.pathname.toLowerCase().includes('presenter')||params.get('mode')==='present';
+const target=params.get('slide')||location.hash.replace(/^#/,'');
+const iframe=document.getElementById('deck');
+iframe.src='/presentation_v14.html?room='+encodeURIComponent(room)+(presenter?'&mode=present':'')+(target?'#'+encodeURIComponent(target):'');
+iframe.addEventListener('load',()=>{
+  const d=iframe.contentDocument;
+  if(!d)return;
+  const st=d.createElement('style');
+  st.textContent=`
+    #unfinished .split-qr{grid-template-columns:minmax(0,1fr) 230px!important;gap:1.4rem!important;align-items:start!important}
+    #unfinished .slide-qr{display:block!important;visibility:visible!important;opacity:1!important;z-index:20!important;position:relative!important;max-width:230px!important}
+    #unfinished .slide-qr img{display:block!important;width:200px!important;max-width:100%!important;height:auto!important;margin:0 auto .4rem!important;background:white!important;padding:.35rem!important}
+    #conduct .art-photo{display:block!important}
+    .poem-screen .poem-stanza .poem-line,.poem-screen .poem-line{font-size:13pt!important;line-height:1.35!important;margin:.08rem 0!important}
+    .poem-screen .poem-stanza{margin-bottom:.8rem!important}
+  `;
+  d.head.appendChild(st);
+
+  const art=d.querySelector('#conduct .art-photo');
+  if(art){art.alt=''; art.setAttribute('aria-label','Hand-drawn sailboat on water beneath mountains');}
+
+  d.querySelectorAll('.slide-url').forEach(el=>el.textContent='in-the-between-rmmla-v15.onrender.com');
+
+  if(target){
+    const el=d.getElementById(target);
+    if(el)setTimeout(()=>el.scrollIntoView({behavior:'auto'}),80);
+  }
+  try{iframe.contentWindow.focus()}catch{}
+});
+</script>
+</body>
+</html>
