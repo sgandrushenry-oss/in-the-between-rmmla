@@ -12,16 +12,16 @@ function readBody(req,limit=16384){return new Promise((resolve,reject)=>{let dat
 function broadcast(room,payload){const set=clients.get(room);if(!set)return;const msg=`data: ${JSON.stringify(payload)}\n\n`;for(const r of set){try{r.write(msg)}catch{}}}
 function mime(file){const e=path.extname(file).toLowerCase();return ({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.svg':'image/svg+xml','.txt':'text/plain; charset=utf-8'})[e]||'application/octet-stream'}
 function cache(file){return path.extname(file)==='.html'?'no-cache':'public, max-age=3600'}
-function serveFile(res,pathname){let rel=pathname.replace(/^\/+/, '');if(!rel)rel='index_v13.html';const aliases={
- audience:'index_v13.html','audience.html':'index_v13.html',
+function serveFile(res,pathname){let rel=pathname.replace(/^\/+/, '');if(!rel)rel='index_v14.html';const aliases={
+ audience:'index_v14.html','audience.html':'index_v14.html',
  contribute:'contribute_v13.html','contribute.html':'contribute_v13.html',c:'contribute_v13.html',
  'respond-state':'respond_state_v13.html','respond-state.html':'respond_state_v13.html',q2:'respond_state_v13.html',
  'respond-imagined':'respond_imagined_v13.html','respond-imagined.html':'respond_imagined_v13.html',q5:'respond_imagined_v13.html',
  presentation:'presentation_v14.html','presentation.html':'presentation_v14.html',p:'presentation_v14.html',
  presenter:'presentation_v14.html','presenter.html':'presentation_v14.html',
  explore:'explore_v12.html','explore.html':'explore_v12.html',x:'explore_v12.html',
- moderator:'moderator_v12.html','moderator.html':'moderator_v12.html',
- links:'links_v13.html','links.html':'links_v13.html'
+ moderator:'moderator_v14.html','moderator.html':'moderator_v14.html',
+ links:'links_v14.html','links.html':'links_v14.html'
 };if(aliases[rel])rel=aliases[rel];const file=path.resolve(ROOT,rel);if(!file.startsWith(ROOT+path.sep)){res.writeHead(403);return res.end('Forbidden')}fs.stat(file,(err,st)=>{if(err||!st.isFile()){res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});return res.end('Not found')}res.writeHead(200,{'Content-Type':mime(file),'Cache-Control':cache(file)});fs.createReadStream(file).pipe(res)})}
 const server=http.createServer(async(req,res)=>{const u=new URL(req.url,`http://${req.headers.host||'localhost'}`),p=u.pathname;
 if(p==='/api/status'&&req.method==='GET')return json(res,200,{ok:true,version:14,storage:'server',moderation:!!ADMIN_TOKEN,premoderation:true,poemForms:['accumulate','pantoum','cento','loop']});
