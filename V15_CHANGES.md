@@ -1,0 +1,1 @@
+V15: restore Slide 5 QR, remove Slide 7 broken-image wording, and reduce collective-poem line size to approximately 13pt.
